@@ -7,15 +7,22 @@ function setup() {
 	createCanvas((windowWidth-400), (windowHeight-25));
 	sun = new Body(333000, createVector(0, 0), createVector(0, 0), 139.268);
 
-	let r = random(sun.r, min(width/2, height/2));
-	let theta = random(TWO_PI);
-	let planetPos = createVector(r*cos(theta), r*sin(theta));
 
+	mercury = new Body(0.0553, planetPos(100), planetVel(planetPos(100)), 4.8794);
+
+	venus = new Body(0.815, planetPos(175), planetVel(planetPos(175)), 12.1036);
+}
+
+function planetPos(r) {
+	let theta = 0;
+	return createVector(r*cos(theta), r*sin(theta));
+}
+
+function planetVel(planetPos) {
 	let planetVel = planetPos.copy();
 	planetVel.rotate(HALF_PI);
 	planetVel.setMag( sqrt( G * sun.mass / planetPos.mag() ) )
-
-	mercury = new Body(0.0553, planetPos, planetVel, 4.8794);
+	return planetVel;
 }
 
 function draw() {
@@ -24,6 +31,9 @@ function draw() {
 	sun.attract(mercury);
 	mercury.update();
 	mercury.show();
+	sun.attract(venus);
+	venus.update();
+	venus.show();
 	sun.show();
 }
 
