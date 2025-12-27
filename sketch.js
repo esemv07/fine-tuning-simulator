@@ -5,12 +5,18 @@ let G = (4.03 * Math.pow(10, -5)); // 1 second = 1 week
 
 function setup() {
 	createCanvas((windowWidth-400), (windowHeight-25));
-	sun = new Body(333000, createVector(0, 0), createVector(0, 0), 139.268);
+	sun = new Body(333000, createVector(0, 0), createVector(0, 0), 34.817, color(253, 204, 108));
 
 
-	mercury = new Body(0.0553, planetPos(100), planetVel(planetPos(100)), 4.8794);
+	mercury = new Body(0.0553, planetPos(25), planetVel(planetPos(25)), 2.4397, color(183, 184, 185));
 
-	venus = new Body(0.815, planetPos(175), planetVel(planetPos(175)), 12.1036);
+	venus = new Body(0.815, planetPos(43.75), planetVel(planetPos(43.75)), 6.0518, color(238 ,203, 139));
+
+	earth = new Body(1, planetPos(62.5), planetVel(planetPos(62.5)), 6.371, color(40, 122, 184));
+
+	mars = new Body(0.815, planetPos(93.75), planetVel(planetPos(93.75)), 3.3895, color(156, 46, 53));
+
+	jupiter = new Body(317.8, planetPos(312.5), planetVel(planetPos(312.5)), 69.911, color(188, 175, 178));
 }
 
 function planetPos(r) {
@@ -31,20 +37,35 @@ function draw() {
 	sun.attract(mercury);
 	mercury.update();
 	mercury.show();
+	
 	sun.attract(venus);
 	venus.update();
 	venus.show();
+
+	sun.attract(earth);
+	earth.update();
+	earth.show();
+
+	sun.attract(mars);
+	mars.update();
+	mars.show();
+
+	sun.attract(jupiter);
+	jupiter.update();
+	jupiter.show();
+
 	sun.show();
 }
 
-function Body(mass, pos, vel, radius) {
+function Body(mass, pos, vel, radius, colour) {
 	this.mass = mass;
 	this.pos = pos;
 	this.vel = vel;
 	this.r = radius;
+	this.c = colour;
 
 	this.show = function() {
-		noStroke(); fill(255);
+		noStroke(); fill(this.c);
 		ellipse(this.pos.x, this.pos.y, this.r, this.r);
 	}
 
