@@ -1,33 +1,57 @@
 let sun;
 let mercury;
+let G = (4.03 * Math.pow(10, -5)); // 1 second = 1 week
 
 
 function setup() {
-	createCanvas(1000,750);
-	sun = new Body(198.9, createVector(0, 0), createVector(0, 0));
+	createCanvas((windowWidth-400), (windowHeight-25));
+	sun = new Body(333000, createVector(0, 0), createVector(0, 0), 139.268);
 
-	let r = random(sun.r, height/2);
+	let r = random(sun.r, min(width/2, height/2));
 	let theta = random(TWO_PI);
 	let planetPos = createVector(r*cos(theta), r*sin(theta));
 
-	mercury = new Body(10, planetPos, createVector(0, 0));
+	let planetVel = planetPos.copy();
+	planetVel.rotate(HALF_PI);
+	planetVel.setMag( sqrt( G * sun.mass / planetPos.mag() ) )
+
+	mercury = new Body(0.0553, planetPos, planetVel, 4.8794);
 }
 
 function draw() {
 	translate(width/2, height/2);
 	background(40);
-	sun.show();
+	sun.attract(mercury);
+	mercury.update();
 	mercury.show();
+	sun.show();
 }
 
-function Body(mass, pos, vel) {
+function Body(mass, pos, vel, radius) {
 	this.mass = mass;
 	this.pos = pos;
 	this.vel = vel;
-	this.r = this.mass;
+	this.r = radius;
 
 	this.show = function() {
 		noStroke(); fill(255);
-		ellipse(this.pos.x, this.pos.y, this.r, this.r)
+		ellipse(this.pos.x, this.pos.y, this.r, this.r);
+	}
+
+	this.update = function() {
+		this.pos.x += this.vel.x;
+		this.pos.y += this.vel.y;
+	}
+
+	this.applyForce = function(f) {
+		this.vel.x += f.x / this.mass;
+		this.vel.y += f.y / this.mass;
+	}
+
+	this.attract = function(child) {
+		let r = dist(this.pos.x, this.pos.y, child.pos.x, child.pos.y);
+		let f = this.pos.copy().sub(child.pos);
+		f.setMag( (G * this.mass * child.mass) / (Math.pow(r, 2)) )
+		child.applyForce(f);
 	}
 }
