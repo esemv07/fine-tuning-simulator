@@ -19,18 +19,6 @@ function setup() {
 	jupiter = new Body(317.8, planetPos(312.5), planetVel(planetPos(312.5)), 69.911, color(188, 175, 178));
 }
 
-function planetPos(r) {
-	let theta = 0;
-	return createVector(r*cos(theta), r*sin(theta));
-}
-
-function planetVel(planetPos) {
-	let planetVel = planetPos.copy();
-	planetVel.rotate(HALF_PI);
-	planetVel.setMag( sqrt( G * sun.mass / planetPos.mag() ) )
-	return planetVel;
-}
-
 function draw() {
 	translate(width/2, height/2);
 	background(40);
@@ -55,6 +43,22 @@ function draw() {
 	jupiter.show();
 
 	sun.show();
+}
+
+function windowResized() {
+	resizeCanvas((windowWidth-400), (windowHeight-25));
+}
+
+function planetPos(r) {
+	let theta = 0;
+	return createVector(r*cos(theta), r*sin(theta));
+}
+
+function planetVel(planetPos) {
+	let planetVel = planetPos.copy();
+	planetVel.rotate(HALF_PI);
+	planetVel.setMag( sqrt( G * sun.mass / planetPos.mag() ) )
+	return planetVel;
 }
 
 function Body(mass, pos, vel, radius, colour) {
