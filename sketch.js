@@ -24,9 +24,24 @@ function setup() {
 	uranus = new Body(14.5, planetPos(1187.5), planetVel(planetPos(1187.5)), 25.362, color(172, 229, 238));
 
 	neptune = new Body(17.1, planetPos(1875), planetVel(planetPos(1875)), 24.622, color(75, 112, 221));
+
+
+	title = createP("Title<br>Second Line");
+	title.position(width+10, 0);
+
+	grav = createSlider((1 * Math.pow(10, -5)), (1 * Math.pow(10, -4)), (4.03 * Math.pow(10, -5)), (1 * Math.pow(10, -7)));
+	grav.position(width+10, 50);
+	grav.size(200);
+
+	grav_label = createP(`Universal Gravitational Constant: ${G}`);
+	grav_label.position(width+10, 70)
 }
 
 function draw() {
+	G = grav.value();
+
+	grav_label.html(`Universal Gravitational Constant: ${G}`)
+
 	translate(width/2, height/2);
 	background(40);
 
