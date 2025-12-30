@@ -1,6 +1,7 @@
 let sun;
 let mercury;
 let G = (4.03 * Math.pow(10, -5)); // 1 second = 1 week
+let zoom = 1;
 
 
 function setup() {
@@ -22,6 +23,9 @@ function setup() {
 function draw() {
 	translate(width/2, height/2);
 	background(40);
+
+	scale(zoom);
+
 	sun.attract(mercury);
 	mercury.update();
 	mercury.show();
@@ -47,6 +51,16 @@ function draw() {
 
 function windowResized() {
 	resizeCanvas((windowWidth-400), (windowHeight-25));
+}
+
+function mouseWheel(event) {
+	if (event.delta > 0) {
+		zoom += 0.1;
+	} else if (event.delta < 0 && zoom >= 0.15) {
+		zoom -= 0.1;
+	}
+
+	return false;
 }
 
 function planetPos(r) {
