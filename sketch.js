@@ -1,7 +1,7 @@
 let sun;
 let mercury;
 let G = (4.03 * Math.pow(10, -5)); // 1 second = 1 week
-let zoom = 1;
+let zoom = 0.5;
 
 
 function setup() {
@@ -18,6 +18,12 @@ function setup() {
 	mars = new Body(0.815, planetPos(93.75), planetVel(planetPos(93.75)), 3.3895, color(156, 46, 53));
 
 	jupiter = new Body(317.8, planetPos(312.5), planetVel(planetPos(312.5)), 69.911, color(188, 175, 178));
+
+	saturn = new Body(95.2, planetPos(593.75), planetVel(planetPos(593.75)), 58.232, color(164, 155, 114));
+
+	uranus = new Body(14.5, planetPos(1187.5), planetVel(planetPos(1187.5)), 25.362, color(172, 229, 238));
+
+	neptune = new Body(17.1, planetPos(1875), planetVel(planetPos(1875)), 24.622, color(75, 112, 221));
 }
 
 function draw() {
@@ -46,6 +52,18 @@ function draw() {
 	jupiter.update();
 	jupiter.show();
 
+	sun.attract(saturn);
+	saturn.update();
+	saturn.show();
+
+	sun.attract(uranus);
+	uranus.update();
+	uranus.show();
+
+	sun.attract(neptune);
+	neptune.update();
+	neptune.show();
+
 	sun.show();
 }
 
@@ -55,9 +73,9 @@ function windowResized() {
 
 function mouseWheel(event) {
 	if (event.delta > 0) {
-		zoom += 0.1;
+		zoom += 0.05;
 	} else if (event.delta < 0 && zoom >= 0.15) {
-		zoom -= 0.1;
+		zoom -= 0.05;
 	}
 
 	return false;
