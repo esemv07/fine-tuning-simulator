@@ -1,3 +1,5 @@
+
+// ### PLANETS ### //
 let sun;
 let mercury;
 let venus;
@@ -7,15 +9,17 @@ let jupiter;
 let saturn;
 let uranus;
 let neptune;
-let G = (4.03 * Math.pow(10, -5)); // 1 second = 1 week
-let zoom = 0.5;
-let animationPaused = false;
+let G = (4.03 * Math.pow(10, -5)); // Universal Gravitational Constant (1 second = 1 week)
+let zoom = 0.5; // Default canvas zoom
+let animationPaused = false; // Animation pausing for slider
 
 
 function setup() {
 	createCanvas((windowWidth-400), (windowHeight-25));
 
-	sun = new Body(333000, createVector(0, 0), createVector(0, 0), 34.817, color(253, 204, 108));
+	// ### PLANETS SETUP ### //
+
+	sun = new Body(333000, createVector(0, 0), createVector(0, 0), 34.817, color(253, 204, 108)); // (sun not to scale)
 
 
 	mercury = new Body(0.0553, planetPos(25), planetVel(planetPos(25)), 2.4397, color(183, 184, 185));
@@ -35,23 +39,29 @@ function setup() {
 	neptune = new Body(17.1, planetPos(1875), planetVel(planetPos(1875)), 24.622, color(75, 112, 221));
 
 
-	title = createP("Title<br>Second Line");
-	title.position(width+10, 0);
+	// ### SIDE PANEL ### //
+	title = createP("Fine Tuning Simulator!");
+	title.style('font-family', "Goldman");
+	title.style('font-size', '32px');
+	title.style('color', 'rgb(19, 55, 105)')
+	title.position(width+20, -20);
 
+	// Universal Gravitational Constant Slider //
 	grav = createSlider((1 * Math.pow(10, -5)), (1 * Math.pow(10, -4)), (4.03 * Math.pow(10, -5)), (1 * Math.pow(10, -7)));
-	grav.position(width+10, 60);
+	grav.position(width+20, 100);
 	grav.size(200);
-	grav.input(pauseOrbit);
-	grav.changed(resumeOrbit);
+	grav.class('grav-slider')
+	grav.input(pauseOrbit); // Pause animation while sliding
+	grav.changed(resumeOrbit); // Resume animation once changed
 
 	grav_label = createP(`Universal Gravitational Constant: ${G*100000}x10<sup>-5<sup>`);
-	grav_label.position(width+10, 70)
+	grav_label.position(width+20, 110);
 }
 
 function draw() {
-	G = grav.value();
+	G = grav.value()
 
-	grav_label.html(`Universal Gravitational Constant: ${G*100000}x10<sup>-5<sup>`)
+	grav_label.html(`Universal Gravitational Constant: ${round((G*100000), 2)}x10<sup>-5<sup>`)
 
 	translate(width/2, height/2);
 	background(40);
@@ -105,6 +115,9 @@ function draw() {
 
 function windowResized() {
 	resizeCanvas((windowWidth-400), (windowHeight-25));
+	title.position(width+20, -20);
+	grav.position(width+20, 60);
+	grav_label.position(width+20, 70);
 }
 
 function mouseWheel(event) {
