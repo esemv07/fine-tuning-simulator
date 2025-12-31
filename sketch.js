@@ -11,6 +11,7 @@ let uranus;
 let neptune;
 let G = (4.03 * Math.pow(10, -5)); // Universal Gravitational Constant (1 second = 1 week)
 let exponent = 2;
+let initial_vel = 1; // Initial Velocity multiplication factor
 let zoom = 0.5; // Default canvas zoom
 let animationPaused = false; // Animation pausing for slider
 
@@ -59,7 +60,7 @@ function setup() {
 	paragraph.style('color', 'rgb(11, 31, 58)');
 	paragraph.position(width+20, 120);
 
-	reset_zoom = createButton('Reset Zoom');
+	reset_zoom = createButton('<i>Reset Zoom</i>');
 	reset_zoom.position(width+255, 257);
 	reset_zoom.mousePressed(resetZoom);
 	reset_zoom.style('background-color', 'rgba(201, 55, 76, 0.5)');
@@ -105,14 +106,35 @@ function setup() {
 	exp_value.style('font-family', 'Labrada');
 	exp_value.style('color', 'rgb(201, 55, 76)');
 	exp_value.style('font-size', '18px');
+
+	// Initial Velocity Factor Slider //
+	ivel = createSlider(0.1, 20, 1, 0.1);
+	ivel.position(width+20, 640);
+	ivel.size(200);
+	ivel.class('grav-slider');
+	ivel.input(pauseOrbit); // Pause animation while sliding
+	ivel.changed(resumeOrbit); // Resume animation once changed
+
+	ivel_label = createP('<b>Initial Velocity Factor: ');
+	ivel_label.style('font-family', 'Labrada');
+	ivel_label.style('color', 'rgb(11, 31, 58)');
+	ivel_label.style('font-size', '18px');
+	ivel_label.position(width+20, 580);
+	ivel_value = createP(`v = ${initial_vel} x v<sub>initial</sub>`);
+	ivel_value.position(width+200, 580);
+	ivel_value.style('font-family', 'Labrada');
+	ivel_value.style('color', 'rgb(201, 55, 76)');
+	ivel_value.style('font-size', '18px');
 }
 
 function draw() {
 	G = grav.value();
 	exponent = exp.value();
+	initial_vel = ivel.value();
 
 	grav_value.html(`${round((G*100000), 2)} x 10<sup>-5<sup>`);
 	exp_value.html(`G (m<sub>1</sub>m<sub>2</sub>) / r<sup>${exponent}</sup>`);
+	ivel_value.html(`v = ${initial_vel} x v<sub>initial</sub>`);
 
 	push();
 
@@ -170,13 +192,14 @@ function draw() {
 
 	// Outline Rectangle - not scaled with canvas zoom
 	noFill();
-	stroke(255);
+	stroke(194, 221, 228);
 	strokeWeight(15);
 	rect(0, 0, width, height);
 
 	noFill();
-	stroke(118, 16, 30);
-	strokeWeight(10);
+	colorMode(RGB, 255, 255, 255, 1);
+	stroke(201, 55, 76, 0.5);
+	strokeWeight(15);
 	rect(0, 0, width, height);
 
 }
@@ -213,7 +236,8 @@ function planetPos(r) {
 function planetVel(planetPos) {
 	let planetVel = planetPos.copy();
 	planetVel.rotate(HALF_PI);
-	planetVel.setMag( sqrt( G * sun.mass / planetPos.mag() ) )
+	planetVel.setMag( sqrt( G * sun.mass / planetPos.mag() ) );
+	planetVel.mult(initial_vel);
 	return planetVel;
 }
 
