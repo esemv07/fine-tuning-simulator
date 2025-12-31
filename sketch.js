@@ -57,6 +57,13 @@ function setup() {
 	paragraph.style('color', 'rgb(11, 31, 58)');
 	paragraph.position(width+20, 120);
 
+	reset_zoom = createButton('Reset Zoom');
+	reset_zoom.position(width+255, 257);
+	reset_zoom.mousePressed(resetZoom);
+	reset_zoom.style('background-color', 'rgba(201, 55, 76, 0.5)');
+	reset_zoom.style('color', 'rgb(11, 31, 58)');
+	reset_zoom.style('border-color', 'transparent');
+
 	// Universal Gravitational Constant Slider //
 	grav = createSlider((1 * Math.pow(10, -5)), (1 * Math.pow(10, -4)), (4.03 * Math.pow(10, -5)), (1 * Math.pow(10, -7)));
 	grav.position(width+20, 460);
@@ -135,8 +142,11 @@ function draw() {
 function windowResized() {
 	resizeCanvas((windowWidth-400), (windowHeight-25));
 	title.position(width+20, -20);
-	grav.position(width+20, 60);
-	grav_label.position(width+20, 70);
+	paragraph.position(width+20, 120);
+	reset_zoom.position(width+255, 257);
+	grav.position(width+20, 460);
+	grav_label.position(width+20, 400);
+	grav_value.position(width+295, 392.5);
 }
 
 function mouseWheel(event) {
@@ -167,6 +177,10 @@ function pauseOrbit() {
 
 function resumeOrbit() {
 	animationPaused = false;
+}
+
+function resetZoom() {
+	zoom = 0.5;
 }
 
 function Body(mass, pos, vel, radius, colour) {
