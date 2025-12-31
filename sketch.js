@@ -299,11 +299,16 @@ function resetAll() {
 }
 
 function startAll() {
-	removeElements();
-	createPlanets();
-	createSidePanel();
-	started = true;
-	ivel.attribute('disabled', true);
+	if (!started) {
+		removeElements();
+		createPlanets();
+		createSidePanel();
+		started = true;
+		animationPaused = false;
+		ivel.attribute('disabled', true);
+		start_button.style('cursor', 'default');
+		start_button.attribute('disabled', true);
+	}
 }
 
 function Body(mass, pos, vel, radius, colour) {
