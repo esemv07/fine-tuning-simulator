@@ -10,6 +10,7 @@ let saturn;
 let uranus;
 let neptune;
 let G = (4.03 * Math.pow(10, -5)); // Universal Gravitational Constant (1 second = 1 week)
+let exponent = 2;
 let zoom = 0.5; // Default canvas zoom
 let animationPaused = false; // Animation pausing for slider
 
@@ -51,8 +52,8 @@ function setup() {
 						- Use sliders to adjust constants<br>
 						- Scrollwheel or trackpad to zoom<br><br>
 						<b>Notes:</b><br>
-						- Default Universal Gravitational Constant is 4.03x10<sup>-5</sup>, therefore 1 second = 1 week<br>
-						- Sun <u>is not</u> to scale`);
+						- Default Universal Gravitational Constant is 4.03x10<sup>-5</sup>, therefore <b>1 second = 1 week</b><br>
+						- Sun <u>is not</u> to scale but the other planets are`);
 	paragraph.style('font-family', 'Labrada');
 	paragraph.style('color', 'rgb(11, 31, 58)');
 	paragraph.position(width+20, 120);
@@ -63,10 +64,12 @@ function setup() {
 	reset_zoom.style('background-color', 'rgba(201, 55, 76, 0.5)');
 	reset_zoom.style('color', 'rgb(11, 31, 58)');
 	reset_zoom.style('border-color', 'transparent');
+	reset_zoom.style('border-radius', '3px');
+	reset_zoom.style('cursor', 'pointer');
 
 	// Universal Gravitational Constant Slider //
 	grav = createSlider((1 * Math.pow(10, -5)), (1 * Math.pow(10, -4)), (4.03 * Math.pow(10, -5)), (1 * Math.pow(10, -7)));
-	grav.position(width+20, 460);
+	grav.position(width+20, 480);
 	grav.size(200);
 	grav.class('grav-slider');
 	grav.input(pauseOrbit); // Pause animation while sliding
@@ -76,18 +79,39 @@ function setup() {
 	grav_label.style('font-family', 'Labrada');
 	grav_label.style('color', 'rgb(11, 31, 58)');
 	grav_label.style('font-size', '18px');
-	grav_label.position(width+20, 400);
-	grav_value = createP(`${round((G*100000), 2)}x10<sup>-5<sup>`);
-	grav_value.position(width+295, 392.5);
+	grav_label.position(width+20, 420);
+	grav_value = createP(`${round((G*100000), 2)} x 10<sup>-5<sup>`);
+	grav_value.position(width+295, 412.5);
 	grav_value.style('font-family', 'Labrada');
 	grav_value.style('color', 'rgb(201, 55, 76)');
 	grav_value.style('font-size', '18px');
+
+	// Inverse Square Law Exponent Slider //
+	exp = createSlider(1, 20, 2, 1);
+	exp.position(width+20, 560);
+	exp.size(200);
+	exp.class('grav-slider');
+	exp.input(pauseOrbit); // Pause animation while sliding
+	exp.changed(resumeOrbit); // Resume animation once changed
+
+	exp_label = createP('<b>Inverse Square Law: ');
+	exp_label.style('font-family', 'Labrada');
+	exp_label.style('color', 'rgb(11, 31, 58)');
+	exp_label.style('font-size', '18px');
+	exp_label.position(width+20, 500);
+	exp_value = createP(`G (m<sub>1</sub>m<sub>2</sub>) / r<sup>${exponent}</sup>`);
+	exp_value.position(width+185, 496);
+	exp_value.style('font-family', 'Labrada');
+	exp_value.style('color', 'rgb(201, 55, 76)');
+	exp_value.style('font-size', '18px');
 }
 
 function draw() {
 	G = grav.value();
+	exponent = exp.value();
 
-	grav_value.html(`${round((G*100000), 2)}x10<sup>-5<sup>`);
+	grav_value.html(`${round((G*100000), 2)} x 10<sup>-5<sup>`);
+	exp_value.html(`G (m<sub>1</sub>m<sub>2</sub>) / r<sup>${exponent}</sup>`);
 
 	translate(width/2, height/2);
 	background(40);
@@ -208,7 +232,7 @@ function Body(mass, pos, vel, radius, colour) {
 	this.attract = function(child) {
 		let r = dist(this.pos.x, this.pos.y, child.pos.x, child.pos.y);
 		let f = this.pos.copy().sub(child.pos);
-		f.setMag( (G * this.mass * child.mass) / (Math.pow(r, 2)) )
+		f.setMag( (G * this.mass * child.mass) / (Math.pow(r, exponent)) )
 		child.applyForce(f);
 	}
 }
