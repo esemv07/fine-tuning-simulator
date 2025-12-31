@@ -110,19 +110,24 @@ function windowResized() {
 	title.position(width+20, -20);
 	paragraph.position(width+20, 120);
 	reset_zoom.position(width+255, 257);
-	grav.position(width+20, 460);
-	grav_label.position(width+20, 400);
-	grav_value.position(width+295, 392.5);
-	exp.position(width+20, 560);
-	exp_label.position(width+20, 500);
-	exp_value.position(width+185, 496);
+	grav.position(width+20, 520);
+	grav_label.position(width+20, 460);
+	grav_value.position(width+295, 452.5);
+	exp.position(width+20, 600);
+	exp_label.position(width+20, 540);
+	exp_value.position(width+185, 536);
+	ivel.position(width+20, 680);
+	ivel_label.position(width+20, 620);
+	ivel_value.position(width+200, 620);
+	start_button.position(width+75, 195);
+	reset_button.position(width+235, 195);
 }
 
 function mouseWheel(event) {
 	if (pmouseX < width && pmouseY < height) {
-		if (event.delta > 0) {
+		if (event.delta < 0) {
 			zoom += 0.05;
-		} else if (event.delta < 0 && zoom >= 0.15) {
+		} else if (event.delta > 0 && zoom >= 0.15) {
 			zoom -= 0.05;
 		}
 		return false;
@@ -157,24 +162,24 @@ function resetZoom() {
 function createPlanets() {
 	// ### PLANETS SETUP ### //
 
-	sun = new Body(333000, createVector(0, 0), createVector(0, 0), 34.817, color(253, 204, 108)); // (sun not to scale)
+	sun = new Body(333000, createVector(0, 0), createVector(0, 0), 34.817, color(253, 204, 108), color('rgba(253, 204, 108, 0.2)')); // (sun not to scale)
 
 
-	mercury = new Body(0.0553, planetPos(25), planetVel(planetPos(25)), 2.4397, color(183, 184, 185));
+	mercury = new Body(0.0553, planetPos(25), planetVel(planetPos(25)), 2.4397, color(183, 184, 185), color('rgba(183, 184, 185, 0.2)'));
 
-	venus = new Body(0.815, planetPos(43.75), planetVel(planetPos(43.75)), 6.0518, color(238 ,203, 139));
+	venus = new Body(0.815, planetPos(43.75), planetVel(planetPos(43.75)), 6.0518, color(238 ,203, 139), color('rgba(238 ,203, 139, 0.2)'));
 
-	earth = new Body(1, planetPos(62.5), planetVel(planetPos(62.5)), 6.371, color(40, 122, 184));
+	earth = new Body(1, planetPos(62.5), planetVel(planetPos(62.5)), 6.371, color(40, 122, 184), color('rgba(40, 122, 184, 0.2)'));
 
-	mars = new Body(0.815, planetPos(93.75), planetVel(planetPos(93.75)), 3.3895, color(156, 46, 53));
+	mars = new Body(0.815, planetPos(93.75), planetVel(planetPos(93.75)), 3.3895, color(156, 46, 53), color('rgba(156, 46, 53, 0.2)'));
 
-	jupiter = new Body(317.8, planetPos(312.5), planetVel(planetPos(312.5)), 69.911, color(188, 175, 178));
+	jupiter = new Body(317.8, planetPos(312.5), planetVel(planetPos(312.5)), 69.911, color(188, 175, 178), color('rgba(188, 175, 178, 0.2)'));
 
-	saturn = new Body(95.2, planetPos(593.75), planetVel(planetPos(593.75)), 58.232, color(164, 155, 114));
+	saturn = new Body(95.2, planetPos(593.75), planetVel(planetPos(593.75)), 58.232, color(164, 155, 114), color('rgba(164, 155, 114, 0.2)'));
 
-	uranus = new Body(14.5, planetPos(1187.5), planetVel(planetPos(1187.5)), 25.362, color(172, 229, 238));
+	uranus = new Body(14.5, planetPos(1187.5), planetVel(planetPos(1187.5)), 25.362, color(172, 229, 238), color('rgba(172, 229, 238, 0.2)'));
 
-	neptune = new Body(17.1, planetPos(1875), planetVel(planetPos(1875)), 24.622, color(75, 112, 221));
+	neptune = new Body(17.1, planetPos(1875), planetVel(planetPos(1875)), 24.622, color(75, 112, 221), color('rgba(75, 112, 221, 0.2)'));
 }
 
 function createSidePanel() {
@@ -192,7 +197,8 @@ function createSidePanel() {
 						<b>Notes:</b><br>
 						- Default Universal Gravitational Constant is 4.03x10<sup>-5</sup>, therefore <b>1 second = 1 week</b><br>
 						- Sun <u>is not</u> to scale but the other planets are<br>
-						- <i>Initial Velocity Factor</i> must be set before pressing start`);
+						- <i>Initial Velocity Factor</i> must be set before pressing start<br>
+						- Planet trails are purely for visualisation purposes :)`);
 	paragraph.style('font-family', 'Labrada');
 	paragraph.style('color', 'rgb(11, 31, 58)');
 	paragraph.position(width+20, 120);
@@ -311,14 +317,21 @@ function startAll() {
 	}
 }
 
-function Body(mass, pos, vel, radius, colour) {
+function Body(mass, pos, vel, radius, colour, trail_colour) {
 	this.mass = mass;
 	this.pos = pos;
 	this.vel = vel;
 	this.r = radius;
 	this.c = colour;
+	this.tc = trail_colour;
+	this.path = [];
 
 	this.show = function() {
+		stroke(this.tc);
+		strokeWeight(1);
+		for (let i = 0; i < this.path.length - 2; i++) {
+			line(this.path[i].x, this.path[i].y, this.path[i + 1].x, this.path[i + 1].y);
+		}
 		noStroke(); fill(this.c);
 		ellipse(this.pos.x, this.pos.y, this.r, this.r);
 	}
@@ -326,6 +339,10 @@ function Body(mass, pos, vel, radius, colour) {
 	this.update = function() {
 		this.pos.x += this.vel.x;
 		this.pos.y += this.vel.y;
+		this.path.push(this.pos.copy());
+		if (this.path.length > this.r * 50) {
+			this.path.splice(0, 1);
+		}
 	}
 
 	this.applyForce = function(f) {
