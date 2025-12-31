@@ -16,7 +16,8 @@ let animationPaused = false; // Animation pausing for slider
 
 
 function setup() {
-	createCanvas((windowWidth-400), (windowHeight-25));
+	canvas = createCanvas((windowWidth-400), (windowHeight-25));
+	canvas.position(10, 10, 'fixed');
 
 	// ### PLANETS SETUP ### //
 
@@ -113,6 +114,8 @@ function draw() {
 	grav_value.html(`${round((G*100000), 2)} x 10<sup>-5<sup>`);
 	exp_value.html(`G (m<sub>1</sub>m<sub>2</sub>) / r<sup>${exponent}</sup>`);
 
+	push();
+
 	translate(width/2, height/2);
 	background(40);
 
@@ -161,26 +164,45 @@ function draw() {
 	neptune.show();
 
 	sun.show();
+
+
+	pop();
+
+	// Outline Rectangle - not scaled with canvas zoom
+	noFill();
+	stroke(255);
+	strokeWeight(15);
+	rect(0, 0, width, height);
+
+	noFill();
+	stroke(118, 16, 30);
+	strokeWeight(10);
+	rect(0, 0, width, height);
+
 }
 
 function windowResized() {
-	resizeCanvas((windowWidth-400), (windowHeight-25));
+	canvas = resizeCanvas((windowWidth-400), (windowHeight-25));
 	title.position(width+20, -20);
 	paragraph.position(width+20, 120);
 	reset_zoom.position(width+255, 257);
 	grav.position(width+20, 460);
 	grav_label.position(width+20, 400);
 	grav_value.position(width+295, 392.5);
+	exp.position(width+20, 560);
+	exp_label.position(width+20, 500);
+	exp_value.position(width+185, 496);
 }
 
 function mouseWheel(event) {
-	if (event.delta > 0) {
-		zoom += 0.05;
-	} else if (event.delta < 0 && zoom >= 0.15) {
-		zoom -= 0.05;
+	if (pmouseX < width && pmouseY < height) {
+		if (event.delta > 0) {
+			zoom += 0.05;
+		} else if (event.delta < 0 && zoom >= 0.15) {
+			zoom -= 0.05;
+		}
+		return false;
 	}
-
-	return false;
 }
 
 function planetPos(r) {
