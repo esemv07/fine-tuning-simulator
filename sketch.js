@@ -41,27 +41,46 @@ function setup() {
 
 	// ### SIDE PANEL ### //
 	title = createP("Fine Tuning Simulator!");
-	title.style('font-family', "Goldman");
-	title.style('font-size', '32px');
-	title.style('color', 'rgb(19, 55, 105)')
+	title.style('font-family', 'Goldman');
+	title.style('font-size', '44px');
+	title.style('color', 'rgb(19, 55, 105)');
 	title.position(width+20, -20);
+
+	paragraph = createP(`This simulator allows you to adjust constants to see their effect on the universe.<br><br>
+						<b>Controls:</b><br>
+						- Use sliders to adjust constants<br>
+						- Scrollwheel or trackpad to zoom<br><br>
+						<b>Notes:</b><br>
+						- Default Universal Gravitational Constant is 4.03x10<sup>-5</sup>, therefore 1 second = 1 week<br>
+						- Sun <u>is not</u> to scale`);
+	paragraph.style('font-family', 'Labrada');
+	paragraph.style('color', 'rgb(11, 31, 58)');
+	paragraph.position(width+20, 120);
 
 	// Universal Gravitational Constant Slider //
 	grav = createSlider((1 * Math.pow(10, -5)), (1 * Math.pow(10, -4)), (4.03 * Math.pow(10, -5)), (1 * Math.pow(10, -7)));
-	grav.position(width+20, 100);
+	grav.position(width+20, 460);
 	grav.size(200);
-	grav.class('grav-slider')
+	grav.class('grav-slider');
 	grav.input(pauseOrbit); // Pause animation while sliding
 	grav.changed(resumeOrbit); // Resume animation once changed
 
-	grav_label = createP(`Universal Gravitational Constant: ${G*100000}x10<sup>-5<sup>`);
-	grav_label.position(width+20, 110);
+	grav_label = createP('<b>Universal Gravitational Constant: ');
+	grav_label.style('font-family', 'Labrada');
+	grav_label.style('color', 'rgb(11, 31, 58)');
+	grav_label.style('font-size', '18px');
+	grav_label.position(width+20, 400);
+	grav_value = createP(`${round((G*100000), 2)}x10<sup>-5<sup>`);
+	grav_value.position(width+295, 392.5);
+	grav_value.style('font-family', 'Labrada');
+	grav_value.style('color', 'rgb(201, 55, 76)');
+	grav_value.style('font-size', '18px');
 }
 
 function draw() {
-	G = grav.value()
+	G = grav.value();
 
-	grav_label.html(`Universal Gravitational Constant: ${round((G*100000), 2)}x10<sup>-5<sup>`)
+	grav_value.html(`${round((G*100000), 2)}x10<sup>-5<sup>`);
 
 	translate(width/2, height/2);
 	background(40);
