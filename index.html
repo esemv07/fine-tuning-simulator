@@ -12,19 +12,32 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;700&family=Labrada:ital,wght@0,100..900;1,100..900&family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
 		<style>
-			.grav-slider {
+			.slider {
 				-webkit-appearance: none;
 			}
-			.grav-slider::-webkit-slider-runnable-track {
+			.slider::-webkit-slider-runnable-track {
 				background: rgb(11, 31, 58);
 				height: 5px;
 				-webkit-appearance: none;
 			}
-			.grav-slider::-webkit-slider-thumb {
+			.slider::-webkit-slider-thumb {
 				width: 15px;
 				height: 15px;
 				background: rgb(118, 16, 30);
 				cursor: pointer;
+				-webkit-appearance: none;
+				margin-top: -5px;
+			}
+			.slider:disabled::-webkit-slider-runnable-track {
+				background: rgba(11, 31, 58, 0.5);
+				height: 5px;
+				-webkit-appearance: none;
+			}
+			.slider:disabled::-webkit-slider-thumb {
+				width: 15px;
+				height: 15px;
+				background: rgba(118, 16, 30, 0.5);
+				cursor: default;
 				-webkit-appearance: none;
 				margin-top: -5px;
 			}

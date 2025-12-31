@@ -232,7 +232,7 @@ function createSidePanel() {
 	grav = createSlider((1 * Math.pow(10, -5)), (1 * Math.pow(10, -4)), G, (1 * Math.pow(10, -7)));
 	grav.position(width+20, 520);
 	grav.size(200);
-	grav.class('grav-slider');
+	grav.class('slider');
 	grav.input(pauseOrbit); // Pause animation while sliding
 	grav.changed(resumeOrbit); // Resume animation once changed
 
@@ -251,7 +251,7 @@ function createSidePanel() {
 	exp = createSlider(1, 20, exponent, 1);
 	exp.position(width+20, 600);
 	exp.size(200);
-	exp.class('grav-slider');
+	exp.class('slider');
 	exp.input(pauseOrbit); // Pause animation while sliding
 	exp.changed(resumeOrbit); // Resume animation once changed
 
@@ -270,7 +270,7 @@ function createSidePanel() {
 	ivel = createSlider(0.1, 20, initial_vel, 0.1);
 	ivel.position(width+20, 680);
 	ivel.size(200);
-	ivel.class('grav-slider');
+	ivel.class('slider');
 	ivel.input(pauseOrbit); // Pause animation while sliding
 	ivel.changed(resumeOrbit); // Resume animation once changed
 
@@ -303,6 +303,7 @@ function startAll() {
 	createPlanets();
 	createSidePanel();
 	started = true;
+	ivel.attribute('disabled', true);
 }
 
 function Body(mass, pos, vel, radius, colour) {
